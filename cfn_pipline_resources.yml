@@ -1,0 +1,55 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  RDE Template Artifact & Repository Stack
+
+Parameters:
+  BucketName:
+    Description: 'Optional name of the bucket.'
+    Type: String
+    Default: 'rde-templates'
+  Encryption:
+    Description: 'Enable server side encryption using KMS'
+    Type: String
+    Default: false
+    AllowedValues: [true, false]
+  KMSKeyARN: 
+    Description: 'The KMS key ARN'
+    Type: String
+    Default: false
+
+Conditions:
+  HasBucketName: !Not [!Equals [!Ref BucketName, '']]
+  HasKMS: !Not [!Equals [!Ref KMSKeyARN, '']]
+  HasEncryption: !Equals [!Ref Encryption, true]
+  HasKMSAndEncryption: !And [!Condition HasKMS, !Condition HasEncryption]
+
+Resources:
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !If [HasBucketName, !Ref BucketName, !Ref 'AWS::NoValue']
+      BucketEncryption: !If [HasKMSAndEncryption, {ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {KMSMasterKeyID: !Ref KMSKeyARN, SSEAlgorithm: 'aws:kms'}}]}, !Ref 'AWS::NoValue']
+  
+  BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref ArtifactBucket
+      PolicyDocument:
+        Statement:
+        - Principal: '*'
+          Action: 's3:PutObject*'
+          Effect: Deny
+          Resource: !Sub '${ArtifactBucket.Arn}/*'
+          Condition:
+            StringNotEquals:
+              's3:x-amz-server-side-encryption': ''
+              's3:x-amz-server-side-encryption-aws-kms-key-id': !Ref KMSKeyARN
+
+Outputs:
+  ArtifactBucket:
+    Description: RDE Artifact Bucket  
+    Value: !Ref ArtifactBucket
+    Export:
+      Name: rde:template:resources:artifactbucket
