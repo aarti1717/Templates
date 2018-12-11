@@ -173,3 +173,30 @@ Outputs:
 
 
 
+
+New Roles which just created :
+
+pipelinerole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: "/"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Action: sts:AssumeRole
+          Principal:
+            Service:
+            - cloudformation.amazonaws.com
+      Policies:
+      - PolicyName: "base_policy" 
+        PolicyDocument: 
+          Version: 2012-10-17
+          Statement:
+          - Resource: '*'
+            Effect: Allow
+            Action:
+            - arn:aws:kms:us-east-1:778784494011:key/998de47d-864c-46f2-9a21-48c097978bdb 
+            
+
+
