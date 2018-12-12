@@ -152,6 +152,7 @@ Resources:
             - ec2:CreateNetworkInterface
             - ec2:DeleteNetworkInterface
             - ec2:Describe*
+            
 
 
 Outputs:
@@ -170,6 +171,10 @@ Outputs:
     Value: !GetAtt RDEAPICFNRole.Arn
     Export:
       Name: rde:roles:api:cfnrole
+      
+      
+      
+      
 
 
 
@@ -197,6 +202,16 @@ pipelinerole:
             Effect: Allow
             Action:
             - arn:aws:kms:us-east-1:778784494011:key/998de47d-864c-46f2-9a21-48c097978bdb 
+            
+            new change:
+            
+            {
+  "Sid": "Enable IAM User Permissions",
+  "Effect": "Allow",
+  "Principal": {"AWS": "arn:aws:kms:us-east-1:778784494011:key/998de47d-864c-46f2-9a21-48c097978bdb"},
+  "Action": "kms:*",
+  "Resource": "*"
+}
             
 
 
