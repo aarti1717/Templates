@@ -9,3 +9,4 @@ Next Steps:
 Create a new role that can be exported as rde:roles:templates:pipelinerole - should have access to the KMS 
 Change the attached pipeline template to have the new role. 
 Check if the Source setp of the pipeline is successful. We do not need the Build step in this case. 
+
