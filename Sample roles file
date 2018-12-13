@@ -152,32 +152,7 @@ Resources:
             - ec2:CreateNetworkInterface
             - ec2:DeleteNetworkInterface
             - ec2:Describe*
-  PipelineRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: "/"
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-        - Effect: Allow
-          Action: sts:AssumeRole
-          Principal:
-            Service:
-            - cloudformation.amazonaws.com
-     Policies:
-      - PolicyName: "base_policy"
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            Effect: Allow
-            Action:
-            - kms:Encrypt
-            - kms:Decrypt
-            - kms:ReEncrypt*
-            - kms:GenerateDataKey
-            - kms:DescribeKey
-            Resource:
-            - arn:aws:kms:us-east-1:778784494011:key/998de47d-864c-46f2-9a21-48c097978bdb
+
 
 Outputs:
   PipelineRole:
@@ -195,3 +170,11 @@ Outputs:
     Value: !GetAtt RDEAPICFNRole.Arn
     Export:
       Name: rde:roles:api:cfnrole
+
+
+
+
+ARN
+arn:aws:kms:us-east-1:778784494011:key/998de47d-864c-46f2-9a21-48c097978bd
+
+
